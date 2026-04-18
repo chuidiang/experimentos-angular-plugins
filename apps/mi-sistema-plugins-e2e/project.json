@@ -1,0 +1,9 @@
+{
+  "name": "mi-sistema-plugins-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mi-sistema-plugins-e2e/src",
+  "implicitDependencies": ["mi-sistema-plugins"],
+  "// targets": "to see all targets run: nx show project mi-sistema-plugins-e2e --web",
+  "targets": {}
+}
