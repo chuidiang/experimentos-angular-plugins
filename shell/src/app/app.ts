@@ -3,6 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { loadRemote } from '@module-federation/enhanced/runtime';
 import { MenuButton, MapContext, LayerItem, MapDialog } from '@mi-sistema-plugins/common-map';
 import { shellMapContextFactory, shellMapEngineOptions } from './map-engine.config';
+import { registeredPlugins } from './plugin-registry';
 
 /** Estado interno de un diálogo flotante gestionado por el shell */
 interface DialogEntry {
@@ -97,59 +98,29 @@ export class App implements AfterViewInit {
       },
     });
 
-    loadRemote<{ menuItems: MenuButton[] }>('plugin_tracks/MenuItems')
-      .then((mod) => {
-        if (mod?.menuItems) {
-          this.menuButtons.update((list) => [...list, ...mod.menuItems]);
-        }
-      })
-      .catch(() => {
-        console.warn('plugin_tracks/MenuItems no disponible');
-      });
+    for (const plugin of registeredPlugins) {
+      loadRemote<{ menuItems: MenuButton[] }>(`${plugin}/MenuItems`)
+        .then((mod) => {
+          if (mod?.menuItems) {
+            this.menuButtons.update((list) => [...list, ...mod.menuItems]);
+          }
+        })
+        .catch(() => {/* plugin no expone MenuItems */});
 
-    loadRemote<{ layerItems: LayerItem[] }>('plugin_tracks/LayerItems')
-      .then((mod) => {
-        mod?.layerItems?.forEach((item) => item.init(this.mapContext!));
-      })
-      .catch(() => {
-        console.warn('plugin_tracks/LayerItems no disponible');
-      });
+      loadRemote<{ layerItems: LayerItem[] }>(`${plugin}/LayerItems`)
+        .then((mod) => {
+          mod?.layerItems?.forEach((item) => item.init(this.mapContext!));
+        })
+        .catch(() => {/* plugin no expone LayerItems */});
 
-    loadRemote<{ menuItems: MenuButton[] }>('plugin_tactical_objects/MenuItems')
-      .then((mod) => {
-        if (mod?.menuItems) {
-          this.menuButtons.update((list) => [...list, ...mod.menuItems]);
-        }
-      })
-      .catch(() => {
-        console.warn('plugin_tactical_objects/MenuItems no disponible');
-      });
-
-    loadRemote<{ layerItems: LayerItem[] }>('plugin_tactical_objects/LayerItems')
-      .then((mod) => {
-        mod?.layerItems?.forEach((item) => item.init(this.mapContext!));
-      })
-      .catch(() => {
-        console.warn('plugin_tactical_objects/LayerItems no disponible');
-      });
-
-    // Load plugin_alarms
-    console.log('[Shell] Loading plugin_alarms...');
-    loadRemote<any>('plugin_alarms/Routes')
-      .then((mod) => {
-        console.log('[Shell] plugin_alarms loaded, module keys:', Object.keys(mod || {}));
-        const initFunc = mod?.initializeAlarmsPlugin;
-        if (initFunc && typeof initFunc === 'function') {
-          console.log('[Shell] Initializing alarms plugin...');
-          initFunc(this.appRef, this.injector, this.ngZone);
-          console.log('[Shell] Alarms plugin initialized');
-        } else {
-          console.warn('[Shell] initializeAlarmsPlugin not found or not a function');
-        }
-      })
-      .catch((err) => {
-        console.warn('[Shell] plugin_alarms no disponible o no se pudo cargar', err);
-      });
+      loadRemote<any>(`${plugin}/Routes`)
+        .then((mod) => {
+          if (typeof mod?.initializeAlarmsPlugin === 'function') {
+            mod.initializeAlarmsPlugin(this.appRef, this.injector, this.ngZone);
+          }
+        })
+        .catch(() => {/* plugin no expone Routes o no está disponible */});
+    }
   }
 }
 
