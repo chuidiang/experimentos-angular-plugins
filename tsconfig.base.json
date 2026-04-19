@@ -14,7 +14,20 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@mi-sistema-plugins/common-map": [
+        "libs/common-map/src/index.ts"
+      ],
+      "@mi-sistema-plugins/common-plugin": [
+        "libs/common-plugin/src/index.ts"
+      ],
+      "@mi-sistema-plugins/ships-domain": [
+        "libs/ships-domain/src/index.ts"
+      ],
+      "@mi-sistema-plugins/tactical-zones-domain": [
+        "libs/tactical-zones-domain/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

@@ -1,0 +1,13 @@
+{
+  "name": "ships-domain",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/ships-domain/src",
+  "tags": ["scope:shared"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "inputs": ["default", "{workspaceRoot}/eslint.config.mjs"]
+    }
+  }
+}

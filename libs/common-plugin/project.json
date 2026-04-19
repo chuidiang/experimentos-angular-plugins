@@ -1,0 +1,13 @@
+{
+  "name": "common-plugin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/common-plugin/src",
+  "tags": ["scope:shared"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "inputs": ["default", "{workspaceRoot}/eslint.config.mjs"]
+    }
+  }
+}

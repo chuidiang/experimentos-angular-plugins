@@ -1,0 +1,26 @@
+<div class="map-wrapper">
+  <div id="world-map" class="map-root"></div>
+
+  <div class="plugin-menu">
+    @for (btn of menuButtons(); track btn.label) {
+      <button class="menu-btn" (click)="mapContext && btn.action(mapContext)">{{ btn.label }}</button>
+    }
+  </div>
+
+  @for (dlg of dialogs(); track dlg.id) {
+    @if (dlg.visible) {
+      <div class="float-dialog"
+           [style.left.px]="dlg.x"
+           [style.top.px]="dlg.y">
+        <div class="float-dialog__header" (mousedown)="onDragStart($event, dlg.id)">
+          <span>{{ dlg.title }}</span>
+          <button class="float-dialog__close" (click)="closeDialog(dlg.id)">&#x2715;</button>
+        </div>
+        <div class="float-dialog__body" [innerHTML]="dlg.content"></div>
+      </div>
+    }
+  }
+
+  <!-- Plugin Alarms Container -->
+  <div id="alarms-plugin-container"></div>
+</div>

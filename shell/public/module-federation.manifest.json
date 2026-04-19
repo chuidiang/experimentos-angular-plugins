@@ -1,0 +1,5 @@
+{
+  "plugin_tracks": "http://localhost:4201/mf-manifest.json",
+  "plugin_tactical_objects": "http://localhost:4203/mf-manifest.json",
+  "plugin_alarms": "http://localhost:4204/mf-manifest.json"
+}

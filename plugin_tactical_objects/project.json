@@ -1,0 +1,104 @@
+{
+  "name": "plugin_tactical_objects",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "plugin_tactical_objects/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/plugin_tactical_objects",
+        "index": "plugin_tactical_objects/src/index.html",
+        "main": "plugin_tactical_objects/src/main.ts",
+        "tsConfig": "plugin_tactical_objects/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "plugin_tactical_objects/public"
+          }
+        ],
+        "styles": ["plugin_tactical_objects/src/styles.css"],
+        "customWebpackConfig": {
+          "path": "plugin_tactical_objects/webpack.config.ts"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "plugin_tactical_objects/webpack.prod.config.ts"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/angular:dev-server",
+      "options": {
+        "port": 4203,
+        "publicHost": "http://localhost:4203"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "plugin_tactical_objects:build:production"
+        },
+        "development": {
+          "buildTarget": "plugin_tactical_objects:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "dependsOn": ["shell:serve"]
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "plugin_tactical_objects:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "buildTarget": "plugin_tactical_objects:build",
+        "port": 4203,
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "plugin_tactical_objects:build:development"
+        },
+        "production": {
+          "buildTarget": "plugin_tactical_objects:build:production"
+        }
+      }
+    }
+  }
+}
