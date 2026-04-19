@@ -1,1 +1,1 @@
-export { createCesiumMapContext } from './lib/cesium-map-context';
+export { cesiumMapContextFactory } from './lib/cesium-map-context';

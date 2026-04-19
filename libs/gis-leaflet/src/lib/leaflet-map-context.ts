@@ -1,38 +1,13 @@
 import * as L from 'leaflet';
 import {
   CircleMarkerStyle,
+  MapContextBootstrapConfig,
+  MapContextFactory,
   MapContext,
-  MapDialog,
   MapPoint,
   PolygonStyle,
   PolylineStyle,
 } from '@mi-sistema-plugins/common-map';
-
-/** Configuración de la capa de teselas WMS. */
-export interface LeafletTileLayerConfig {
-  url: string;
-  options: L.WMSOptions;
-}
-
-/**
- * Callbacks que el shell implementa para gestionar los diálogos flotantes.
- * Se mantienen en el shell porque son estado de UI Angular (signals, DomSanitizer).
- */
-export interface LeafletDialogCallbacks {
-  registerDialog(id: string, title: string): MapDialog;
-  toggleDialog(id: string): void;
-  showDialog(id: string): void;
-}
-
-/** Opciones de configuración para montar el mapa Leaflet. */
-export interface LeafletMapConfig {
-  center: [number, number];
-  zoom: number;
-  minZoom?: number;
-  tileLayer: LeafletTileLayerConfig;
-  /** Delega la gestión de diálogos flotantes al shell. */
-  dialogs: LeafletDialogCallbacks;
-}
 
 /**
  * Monta un mapa Leaflet en el elemento DOM indicado y devuelve
@@ -41,16 +16,32 @@ export interface LeafletMapConfig {
  * Encapsula toda la lógica de Leaflet para que el shell no dependa
  * directamente de la librería de mapas.
  */
-export function mountLeafletMap(elementId: string, config: LeafletMapConfig): MapContext {
+function addLeafletBaseLayer(map: L.Map, config: MapContextBootstrapConfig): void {
+  if (config.baseLayer.type === 'wms') {
+    L.tileLayer.wms(config.baseLayer.url, {
+      layers: config.baseLayer.layers,
+      format: config.baseLayer.format ?? 'image/png',
+      transparent: config.baseLayer.transparent ?? false,
+      attribution: config.baseLayer.attribution,
+    }).addTo(map);
+    return;
+  }
+
+  L.tileLayer(config.baseLayer.url, {
+    attribution: config.baseLayer.attribution,
+  }).addTo(map);
+}
+
+export const leafletMapContextFactory: MapContextFactory = (elementId, config): MapContext => {
   const map = L.map(elementId, {
-    center: config.center,
-    zoom: config.zoom,
-    minZoom: config.minZoom ?? 2,
+    center: config.view.center,
+    zoom: config.view.zoom,
+    minZoom: config.view.minZoom ?? 2,
     zoomControl: true,
     doubleClickZoom: false,
   });
 
-  L.tileLayer.wms(config.tileLayer.url, config.tileLayer.options).addTo(map);
+  addLeafletBaseLayer(map, config);
 
   const layersControl = L.control.layers({}, {}, { collapsed: false }).addTo(map);
   const pluginLayers = new Map<string, L.LayerGroup>();
@@ -229,4 +220,4 @@ export function mountLeafletMap(elementId: string, config: LeafletMapConfig): Ma
     toggleDialog: (id) => config.dialogs.toggleDialog(id),
     showDialog: (id) => config.dialogs.showDialog(id),
   };
-}
+};

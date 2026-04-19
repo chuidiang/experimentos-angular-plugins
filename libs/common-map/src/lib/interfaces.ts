@@ -38,6 +38,53 @@ export interface MapDialog {
   setContent(html: string): void;
 }
 
+/** Callbacks de UI que el shell expone al motor GIS para diálogos flotantes. */
+export interface MapDialogController {
+  registerDialog(id: string, title: string): MapDialog;
+  toggleDialog(id: string): void;
+  showDialog(id: string): void;
+}
+
+/** Configuración de vista inicial compartida por los motores GIS. */
+export interface MapViewConfig {
+  center: [number, number];
+  zoom: number;
+  minZoom?: number;
+}
+
+/** Configuración de mapa base con formato proveedor-agnóstico. */
+export type MapBaseLayerConfig =
+  | {
+      type: 'wms';
+      url: string;
+      layers: string;
+      format?: string;
+      transparent?: boolean;
+      attribution?: string;
+    }
+  | {
+      type: 'xyz';
+      url: string;
+      attribution?: string;
+    };
+
+/** Opciones independientes del proveedor para inicializar el motor GIS. */
+export interface MapEngineOptions {
+  view: MapViewConfig;
+  baseLayer: MapBaseLayerConfig;
+}
+
+/** Configuración completa de bootstrap del contexto de mapa. */
+export interface MapContextBootstrapConfig extends MapEngineOptions {
+  dialogs: MapDialogController;
+}
+
+/** Factoría que crea un MapContext para un proveedor GIS concreto. */
+export type MapContextFactory = (
+  elementId: string,
+  config: MapContextBootstrapConfig
+) => MapContext;
+
 /**
  * Contexto del mapa que el shell proporciona a los plugins.
  * Permite interactuar con el mapa sin depender directamente de Leaflet.

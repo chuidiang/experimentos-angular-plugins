@@ -2,7 +2,7 @@ import { AfterViewInit, Component, inject, signal, ApplicationRef, EnvironmentIn
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { loadRemote } from '@module-federation/enhanced/runtime';
 import { MenuButton, MapContext, LayerItem, MapDialog } from '@mi-sistema-plugins/common-map';
-import { mountLeafletMap } from '@mi-sistema-plugins/gis-leaflet';
+import { shellMapContextFactory, shellMapEngineOptions } from './map-engine.config';
 
 /** Estado interno de un diálogo flotante gestionado por el shell */
 interface DialogEntry {
@@ -57,19 +57,8 @@ export class App implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.mapContext = mountLeafletMap('world-map', {
-      center: [20, 0],
-      zoom: 2,
-      minZoom: 2,
-      tileLayer: {
-        url: 'https://ows.terrestris.de/osm/service?',
-        options: {
-          layers: 'OSM-WMS',
-          format: 'image/png',
-          transparent: false,
-          attribution: '&copy; OpenStreetMap contributors | terrestris OSM WMS',
-        },
-      },
+    this.mapContext = shellMapContextFactory('world-map', {
+      ...shellMapEngineOptions,
       dialogs: {
         registerDialog: (id, title): MapDialog => {
           this.dialogs.update((list) => {

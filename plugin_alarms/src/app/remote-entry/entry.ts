@@ -118,7 +118,6 @@ export class RemoteEntry implements OnInit, OnDestroy {
       if (!exists) {
         this.alarms.update(list => [...list, event]);
         console.log('[RemoteEntry] Added alarm, total alarms:', this.alarms().length);
-        setTimeout(() => this.dismissAlarm(event), 10000);
       }
     });
   }
