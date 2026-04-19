@@ -1,0 +1,9 @@
+/* Cesium viewer uses internal DOM that must be sized globally. */
+#world-map,
+#world-map .cesium-viewer,
+#world-map .cesium-viewer-cesiumWidgetContainer,
+#world-map .cesium-widget,
+#world-map .cesium-widget canvas {
+  width: 100%;
+  height: 100%;
+}

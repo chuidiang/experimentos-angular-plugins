@@ -42,7 +42,9 @@
         ],
         "styles": [
           "shell/src/styles.css",
-          "node_modules/cesium/Build/Cesium/Widgets/widgets.css"
+          "node_modules/leaflet/dist/leaflet.css",
+          "node_modules/cesium/Build/Cesium/Widgets/widgets.css",
+          "libs/gis-cesium/src/lib/cesium-layout.css"
         ],
         "customWebpackConfig": {
           "path": "shell/webpack.config.ts"
