@@ -26,6 +26,12 @@
       ],
       "@mi-sistema-plugins/tactical-zones-domain": [
         "libs/tactical-zones-domain/src/index.ts"
+      ],
+      "@mi-sistema-plugins/gis-leaflet": [
+        "libs/gis-leaflet/src/index.ts"
+      ],
+      "@mi-sistema-plugins/gis-cesium": [
+        "libs/gis-cesium/src/index.ts"
       ]
     }
   },

@@ -73,6 +73,11 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 
+# ── GitHub Actions ───────────────────────────────────────────────────────────
+# El token de GitHub no tiene scope 'workflow', por lo que no se pueden subir
+# ficheros de workflow. Se excluyen para evitar errores en git push.
+.github/workflows/
+
 # ── Misc ─────────────────────────────────────────────────────────────────────
 /.sass-cache
 /typings
